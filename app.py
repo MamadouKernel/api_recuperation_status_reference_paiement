@@ -35,8 +35,14 @@ def generate_jwt_token():
     }
     token = jwt.encode(payload, jwt_secret, algorithm='HS256')
     return token
-my_token = generate_jwt_token()
-print(my_token)
+# my_token = generate_jwt_token()
+# print(my_token)
+
+# Endpoint pour afficher le token valide
+@app.get('/afficher_token/')
+def afficher_token():
+    token = generate_jwt_token()
+    return {"token de connection": token}
 
 # Fonction pour vérifier un JWT
 def verify_jwt(token: str = Depends(security)):
