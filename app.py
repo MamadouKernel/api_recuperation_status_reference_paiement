@@ -6,7 +6,7 @@ import jwt
 import os
 from dotenv import load_dotenv
 
-app = FastAPI()
+app = FastAPI(title="RECUPERATION DES PAIEMENTS,STATUS D'UN PAIEMENT, REFERENCES DES PAIEMENTS")
 security = HTTPBearer()
 
 # Charger les variables d'environnement du fichier .env
@@ -59,3 +59,17 @@ def get_payment_references(payload: dict = Depends(verify_jwt)):
 def get_payment_statuses(payload: dict = Depends(verify_jwt)):
     statuses = [payment['status'] for payment in payments]
     return statuses
+
+# Endpoint pour récupérer un paielement par reference
+
+@app.get('/paiements/{reference}')
+def get_payment_by_reference(reference: str, payload: dict = Depends(verify_jwt)):
+    for payment in payments:
+        if payment['reference'] == reference:
+            return payment
+
+
+# Endpoint pour récupérer tous les paiements
+@app.get('/paiements/')
+def get_payment(payload: dict = Depends(verify_jwt)):
+    return payments
